@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм»
 
-* Студент: [Наталья Ким](https://up.htmlacademy.ru/javascript-individual/2/user/1446929).
-* Наставник: `Неизвестно`.
+- Студент: [Наталья Ким](https://up.htmlacademy.ru/javascript-individual/2/user/1446929).
+- Наставник: `Евгений Лепёшкин`.
 
 ---
 
