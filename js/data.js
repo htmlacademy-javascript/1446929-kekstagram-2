@@ -1,4 +1,4 @@
-import {randomNumber, getRandomArrayItem} from './util.js';
+import {getRandomNumber, getRandomArrayItem} from './util.js';
 
 const PHOTO_COUNT = 25;
 
@@ -45,8 +45,8 @@ const messages = [
 
 
 const addComment = () => ({
-  id: randomNumber(IDs.MIN, IDs.MAX),
-  avatar: `img/avatar-${randomNumber(Avatars.MIN , Avatars.MAX)}.svg`,
+  id: getRandomNumber(IDs.MIN, IDs.MAX),
+  avatar: `img/avatar-${getRandomNumber(Avatars.MIN , Avatars.MAX)}.svg`,
   message: getRandomArrayItem(messages),
   name: getRandomArrayItem(names)
 });
@@ -54,7 +54,7 @@ const addComment = () => ({
 const addComments = () => {
   const comments = [];
 
-  for (let i = 0; i < randomNumber(Comments.MIN , Comments.MAX); i++) {
+  for (let i = 0; i < getRandomNumber(Comments.MIN , Comments.MAX); i++) {
     comments.push(addComment());
   }
 
@@ -65,7 +65,7 @@ const addPhoto = (index) => ({
   id: index + 1,
   url: `photos/${index + 1}.jpg`,
   description: `${photoDescription}`,
-  likes: randomNumber(Likes.MIN, Likes.MAX),
+  likes: getRandomNumber(Likes.MIN, Likes.MAX),
   comments: addComments()
 });
 
