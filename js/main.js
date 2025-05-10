@@ -1,3 +1,3 @@
-import {addPhotos} from './data.js';
+import './display-photos.js';
 
-addPhotos();
+
