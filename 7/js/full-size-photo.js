@@ -1,4 +1,4 @@
-import { toggleClass, isEscapeKey } from './util';
+import { toggleClass, isEscapeKey } from './util.js';
 
 const fullSizePhotoContainer = document.querySelector('.big-picture');
 const fullSizePhoto = fullSizePhotoContainer.querySelector('.big-picture__img img');

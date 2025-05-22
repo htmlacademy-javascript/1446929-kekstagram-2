@@ -1,4 +1,4 @@
-import { renderFullSizePhoto } from './full-size-photo';
+import { renderFullSizePhoto } from './full-size-photo.js';
 
 const userPhotosContainer = document.querySelector('.pictures');
 const userPhotoTemplate = document.querySelector('#picture').content.querySelector('.picture');
