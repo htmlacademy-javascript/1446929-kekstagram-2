@@ -138,6 +138,7 @@ const onOpenPhotoUploadForm = (evt) => {
 function openPhotoUploadForm() {
   document.addEventListener('keydown', onPhotoUploadEscKey);
   toggleModal();
+  toggleSubmitBtn();
 }
 
 function closePhotoUploadForm() {
