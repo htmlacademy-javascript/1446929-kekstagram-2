@@ -1,4 +1,5 @@
 import { toggleClass, isEscapeKey } from './util.js';
+import { updateScale, resetScale, updateEffect, resetSlider } from './update-photo-mode.js';
 
 const HASHTAG_MAX_COUNT = 5;
 
@@ -89,12 +90,9 @@ const validateHashtags = (value) => {
 pristine.addValidator(photoDescriptionField, validatePhotoDescription, getDescriptionErrorMessage);
 pristine.addValidator(hashtagInput, validateHashtags, getHashtagErrorMessage);
 
+
 const toggleSubmitBtn = () => {
-  if (pristine.validate()) {
-    photoSubmitBtn.disabled = false;
-  } else {
-    photoSubmitBtn.disabled = true;
-  }
+  photoSubmitBtn.disabled = !pristine.validate();
 };
 
 const onHashtagInput = () => toggleSubmitBtn();
@@ -113,6 +111,8 @@ const resetForm = () => {
     });
   }
   photoUploadForm.reset();
+  resetScale();
+  resetSlider();
 };
 
 const onCancelPhotoUpload = (evt) => {
@@ -139,6 +139,7 @@ function openPhotoUploadForm() {
   document.addEventListener('keydown', onPhotoUploadEscKey);
   toggleModal();
   toggleSubmitBtn();
+  resetSlider();
 }
 
 function closePhotoUploadForm() {
@@ -161,6 +162,8 @@ const initPhotoUploadForm = () => {
   cancelPhotoUploadBtn.addEventListener('click', onCancelPhotoUpload);
   hashtagInput.addEventListener('input', onHashtagInput);
   photoDescriptionField.addEventListener('input', onDescriptionInput);
+  updateScale();
+  updateEffect();
 };
 
 
