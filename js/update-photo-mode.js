@@ -122,13 +122,15 @@ function onEffectItemClick() {
   }
   sliderContainer.style.display = '';
   sliderElement.noUiSlider.updateOptions(currentEffect.options);
-  preview.style.filter = currentEffect.setFilter(currentEffect.options.start);
+  preview.style.filter = currentEffect.setFilter(currentEffect.options.range.max);
+  sliderElement.noUiSlider.set(100);
 }
 
 const updateScale = () => {
   scaleUpBtn.addEventListener('click', onScaleUp);
   scaleDownBtn.addEventListener('click', onScaleDown);
 };
+
 
 const updateEffect = () => {
 

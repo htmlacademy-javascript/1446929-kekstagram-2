@@ -1,5 +1,6 @@
 import { toggleClass, isEscapeKey } from './util.js';
 import { updateScale, resetScale, updateEffect, resetSlider } from './update-photo-mode.js';
+import { sendData } from './api.js';
 
 const HASHTAG_MAX_COUNT = 5;
 
@@ -18,6 +19,16 @@ const photoDescriptionField = photoUploadForm.querySelector('.text__description'
 const cancelPhotoUploadBtn = photoUploadForm.querySelector('#upload-cancel');
 const photoSubmitBtn = photoUploadForm.querySelector('#upload-submit');
 
+const successTemplate = document.querySelector('#success').content;
+const successElement = successTemplate.cloneNode(true);
+const successSubmitMessage = successElement.querySelector('.success');
+const successUploadBtn = successElement.querySelector('.success__button');
+
+const errorTemplate = document.querySelector('#error').content;
+const errorElement = errorTemplate.cloneNode(true);
+const errorSubmitMessage = errorElement.querySelector('.error');
+const errorUploadBtn = errorElement.querySelector('.error__button');
+
 let errorMessage = '';
 
 const getHashtagErrorMessage = () => errorMessage;
@@ -29,7 +40,6 @@ const pristine = new Pristine(photoUploadForm, {
   errorTextParent: 'img-upload__field-wrapper',
   errorTextClass: 'img-upload__field-wrapper--error',
 });
-
 
 const validatePhotoDescription = (description) => description.length < DESCRIPTION_MAX_LENGTH;
 
@@ -122,7 +132,8 @@ const onCancelPhotoUpload = (evt) => {
 };
 
 const onPhotoUploadEscKey = (evt) => {
-  if (isEscapeKey(evt) && document.activeElement !== hashtagInput && document.activeElement !== photoDescriptionField) {
+  const errorPopup = errorElement.querySelector('.popup');
+  if (isEscapeKey(evt) && document.activeElement !== hashtagInput && document.activeElement !== photoDescriptionField && errorPopup) {
     evt.preventDefault();
     resetForm();
     closePhotoUploadForm();
@@ -148,23 +159,91 @@ function closePhotoUploadForm() {
   toggleModal();
 }
 
-const onPristineValidate = (evt) => {
-  evt.preventDefault();
-
-  if (pristine.validate()) {
-    photoUploadForm.submit();
+const onSuccessUploadEscKey = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    successSubmitMessage.remove();
+    document.removeEventListener('keydown', onSuccessUploadEscKey);
   }
 };
 
+const onFailUploadEscKey = (evt) => {
+
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    errorSubmitMessage.remove();
+    document.removeEventListener('keydown', onFailUploadEscKey);
+  }
+};
+
+const onUploadSucceed = (evt) => {
+  evt.preventDefault();
+  successSubmitMessage.remove();
+};
+
+const onUploadFail = (evt) => {
+  evt.preventDefault();
+  errorSubmitMessage.remove();
+};
+
+const showSuccess = () => {
+  document.addEventListener('keydown', onSuccessUploadEscKey);
+  document.body.appendChild(successSubmitMessage);
+  closePhotoUploadForm();
+  resetForm();
+};
+
+const showError = () => {
+  document.addEventListener('keydown', onFailUploadEscKey);
+  document.body.appendChild(errorSubmitMessage);
+};
+
+const blockSubmitBtn = () => {
+  photoSubmitBtn.disabled = true;
+};
+
+const unblockSubmitBtn = () => {
+  photoSubmitBtn.disabled = false;
+};
+
+const setUserFormSubmit = (onSuccess, onFail) => {
+  photoUploadForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    if (pristine.validate()) {
+      blockSubmitBtn();
+      sendData(
+        () => {
+          onSuccess();
+          unblockSubmitBtn();
+        },
+        () => {
+          onFail();
+          unblockSubmitBtn();
+        },
+        new FormData(photoUploadForm)
+      );
+    }
+  });
+};
+
 const initPhotoUploadForm = () => {
-  photoUploadForm.addEventListener('submit', onPristineValidate);
   photoUploadInput.addEventListener('change', onOpenPhotoUploadForm);
   cancelPhotoUploadBtn.addEventListener('click', onCancelPhotoUpload);
   hashtagInput.addEventListener('input', onHashtagInput);
   photoDescriptionField.addEventListener('input', onDescriptionInput);
+  successUploadBtn.addEventListener('click', onUploadSucceed);
+  errorUploadBtn.addEventListener('click', onUploadFail);
   updateScale();
   updateEffect();
 };
 
+document.addEventListener('click', (evt) => {
+  if (evt.target === successElement || successElement.contains(evt.target) || evt.target === errorElement || errorElement.contains(evt.target)) {
+    return;
+  }
+  successSubmitMessage.remove();
+  errorSubmitMessage.remove();
+});
 
-export { initPhotoUploadForm };
+export { initPhotoUploadForm, setUserFormSubmit, showSuccess, showError };

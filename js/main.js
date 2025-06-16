@@ -1,7 +1,12 @@
-import { addPhotos } from './data.js';
 import { renderPhotos } from './photos.js';
-import { initPhotoUploadForm } from './upload-photo.js';
+import { getData } from './api.js';
+import { initPhotoUploadForm, setUserFormSubmit, showSuccess, showError } from './upload-photo.js';
 
-renderPhotos(addPhotos());
+getData((photos) => {
+  renderPhotos(photos);
+});
+
+setUserFormSubmit(showSuccess, showError);
 
 initPhotoUploadForm();
+
