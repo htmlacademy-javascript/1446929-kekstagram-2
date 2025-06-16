@@ -132,7 +132,8 @@ const onCancelPhotoUpload = (evt) => {
 };
 
 const onPhotoUploadEscKey = (evt) => {
-  if (isEscapeKey(evt) && document.activeElement !== hashtagInput && document.activeElement !== photoDescriptionField) {
+  const errorPopup = errorElement.querySelector('.popup');
+  if (isEscapeKey(evt) && document.activeElement !== hashtagInput && document.activeElement !== photoDescriptionField && errorPopup) {
     evt.preventDefault();
     resetForm();
     closePhotoUploadForm();
@@ -162,10 +163,12 @@ const onSuccessUploadEscKey = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     successSubmitMessage.remove();
+    document.removeEventListener('keydown', onSuccessUploadEscKey);
   }
 };
 
 const onFailUploadEscKey = (evt) => {
+
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     errorSubmitMessage.remove();
