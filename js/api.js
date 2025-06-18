@@ -1,3 +1,5 @@
+import { initFilters } from './photos-filters.js';
+
 const BASE_URL = 'https://31.javascript.htmlacademy.pro/kekstagram';
 
 const Route = {
@@ -28,7 +30,10 @@ const getData = (onSuccess) => {
       }
       return response.json();
     })
-    .then((photos) => onSuccess(photos))
+    .then((photos) => {
+      onSuccess(photos);
+      initFilters(photos);
+    })
     .catch((error) => showErrorMessage(error));
 };
 
