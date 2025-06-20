@@ -168,7 +168,6 @@ const onSuccessUploadEscKey = (evt) => {
 };
 
 const onFailUploadEscKey = (evt) => {
-
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     errorSubmitMessage.remove();

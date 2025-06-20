@@ -20,11 +20,11 @@ const renderPhoto = (photo) => {
 };
 
 const renderPhotos = (photos) => {
-  photos?.forEach((photo) => {
+  photos?.slice().forEach((photo) => {
     userPhotosFragment.appendChild(renderPhoto(photo));
   });
+
   userPhotosContainer.appendChild(userPhotosFragment);
 };
-
 
 export { renderPhotos };
