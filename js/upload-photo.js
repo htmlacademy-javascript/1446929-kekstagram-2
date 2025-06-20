@@ -1,9 +1,9 @@
 import { toggleClass, isEscapeKey } from './util.js';
 import { updateScale, resetScale, updateEffect, resetSlider } from './update-photo-mode.js';
-import { sendData } from './api.js';
+import { sendData, showErrorMessage } from './api.js';
 
 const HASHTAG_MAX_COUNT = 5;
-
+const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 const DESCRIPTION_MAX_LENGTH = 140;
 
 const HashtagLength = {
@@ -14,6 +14,7 @@ const HashtagLength = {
 const photoUploadForm = document.querySelector('.img-upload__form');
 const photoUploadInput = photoUploadForm.querySelector('.img-upload__input');
 const photoUploadOverlay = photoUploadForm.querySelector('.img-upload__overlay');
+const preview = document.querySelector('.img-upload__preview img');
 const hashtagInput = photoUploadForm.querySelector('.text__hashtags');
 const photoDescriptionField = photoUploadForm.querySelector('.text__description');
 const cancelPhotoUploadBtn = photoUploadForm.querySelector('#upload-cancel');
@@ -133,11 +134,12 @@ const onCancelPhotoUpload = (evt) => {
 
 const onPhotoUploadEscKey = (evt) => {
   const errorPopup = errorElement.querySelector('.popup');
-  if (isEscapeKey(evt) && document.activeElement !== hashtagInput && document.activeElement !== photoDescriptionField && errorPopup) {
+  if (isEscapeKey(evt) && document.activeElement !== hashtagInput && document.activeElement !== photoDescriptionField && !errorPopup) {
     evt.preventDefault();
     resetForm();
     closePhotoUploadForm();
   }
+  document.removeEventListener('keydown', onPhotoUploadEscKey);
 };
 
 const onOpenPhotoUploadForm = (evt) => {
@@ -147,6 +149,16 @@ const onOpenPhotoUploadForm = (evt) => {
 };
 
 function openPhotoUploadForm() {
+  const file = photoUploadInput.files[0];
+  const fileName = file.name.toLowerCase();
+  const matches = FILE_TYPES.some((type) => fileName.endsWith(type));
+
+  if (matches) {
+    preview.src = URL.createObjectURL(file);
+  } else {
+    showErrorMessage();
+    closePhotoUploadForm();
+  }
   document.addEventListener('keydown', onPhotoUploadEscKey);
   toggleModal();
   toggleSubmitBtn();
@@ -171,7 +183,6 @@ const onFailUploadEscKey = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     errorSubmitMessage.remove();
-    document.removeEventListener('keydown', onFailUploadEscKey);
   }
 };
 
