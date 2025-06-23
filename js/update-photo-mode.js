@@ -6,8 +6,8 @@ const Scale = {
 };
 
 const scaleValueField = document.querySelector('.scale__control--value');
-const scaleDownBtn = document.querySelector('.scale__control--smaller');
-const scaleUpBtn = document.querySelector('.scale__control--bigger');
+const scaleDownButton = document.querySelector('.scale__control--smaller');
+const scaleUpButton = document.querySelector('.scale__control--bigger');
 const preview = document.querySelector('.img-upload__preview img');
 const sliderContainer = document.querySelector('.img-upload__effect-level');
 const sliderElement = document.querySelector('.effect-level__slider');
@@ -123,12 +123,12 @@ function onEffectItemClick() {
   sliderContainer.style.display = '';
   sliderElement.noUiSlider.updateOptions(currentEffect.options);
   preview.style.filter = currentEffect.setFilter(currentEffect.options.range.max);
-  sliderElement.noUiSlider.set(100);
+  sliderElement.noUiSlider.set(Scale.MAX);
 }
 
 const updateScale = () => {
-  scaleUpBtn.addEventListener('click', onScaleUp);
-  scaleDownBtn.addEventListener('click', onScaleDown);
+  scaleUpButton.addEventListener('click', onScaleUp);
+  scaleDownButton.addEventListener('click', onScaleDown);
 };
 
 
