@@ -5,7 +5,7 @@ const MAX_RANDOM_PHOTO_COUNT = 10;
 
 const RENDER_DELAY = 500;
 
-const FilterNames = {
+const FilterName = {
   DEFAULT: 'filter-default',
   RANDOM: 'filter-random',
   POPULAR: 'filter-discussed'
@@ -25,24 +25,18 @@ let posts = [];
 
 const renderWithDelay = debounce(renderPhotos, RENDER_DELAY);
 
-const removeFilteredPhotos = () => {
-  const filteredPhotos = document.querySelectorAll('.picture');
-  filteredPhotos.forEach((photo) => photo.remove());
-};
-
 const setFilter = (filter) => {
   let filterFunction = filterFunctions.setDefault;
 
   switch (filter) {
-    case FilterNames.RANDOM:
+    case FilterName.RANDOM:
       filterFunction = filterFunctions.setRandom;
       break;
-    case FilterNames.POPULAR:
+    case FilterName.POPULAR:
       filterFunction = filterFunctions.setPopular;
       break;
   }
 
-  removeFilteredPhotos();
   renderWithDelay(filterFunction(posts));
 };
 
@@ -60,10 +54,8 @@ const onPhotosFilterFormClick = (evt) => {
 
 const initFilters = (data) => {
   posts = data;
-
   photosFilterContainer.classList.remove('img-filters--inactive');
   photosFilterForm.addEventListener('click', onPhotosFilterFormClick);
-
 };
 
 export { initFilters };

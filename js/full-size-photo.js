@@ -1,16 +1,16 @@
 import { toggleClass, isEscapeKey } from './util.js';
 
+const COMMENT_STEP = 5;
+
 const fullSizePhotoContainer = document.querySelector('.big-picture');
 const fullSizePhoto = fullSizePhotoContainer.querySelector('.big-picture__img img');
 const likesCount = document.querySelector('.likes-count');
 const commentCount = document.querySelector('.social__comment-count');
 const userCommentsContainer = document.querySelector('.social__comments');
 const userComment = userCommentsContainer.querySelector('.social__comment');
-const commentsLoaderBtn = document.querySelector('.comments-loader');
+const commentsLoaderButton = document.querySelector('.comments-loader');
 const caption = document.querySelector('.social__caption');
-const closeBtn = document.querySelector('#picture-cancel');
-
-const COMMENT_STEP = 5;
+const closeButton = document.querySelector('.big-picture__cancel');
 
 const commentFragment = document.createDocumentFragment();
 
@@ -53,15 +53,15 @@ const renderComments = () => {
   }
 
   if (currentComments.length <= COMMENT_STEP || commentsCount >= currentComments.length) {
-    commentsLoaderBtn.classList.add('hidden');
+    commentsLoaderButton.classList.add('hidden');
   } else {
-    commentsLoaderBtn.classList.remove('hidden');
+    commentsLoaderButton.classList.remove('hidden');
   }
 
   userCommentsContainer.appendChild(commentFragment);
 };
 
-const onCloseFullSizePhoto = () => {
+const onCloseFullSizePhotoClick = () => {
   closeFullSizePhoto();
 };
 
@@ -74,11 +74,11 @@ const onFullSizePhotoEscKey = (evt) => {
 
 function closeFullSizePhoto() {
   commentsCount = COMMENT_STEP;
-  document.removeEventListener('keydown', onFullSizePhotoEscKey);
   toggleModal();
+  document.removeEventListener('keydown', onFullSizePhotoEscKey);
 }
 
-const onCommentsLoaderBtn = () => {
+const onCommentsLoaderButtonClick = () => {
   commentsCount += COMMENT_STEP;
   renderComments();
 };
@@ -87,12 +87,12 @@ const renderFullSizePhoto = (photo) => {
   currentComments = photo.comments.slice();
   show(photo);
   renderComments();
-  document.addEventListener('keydown', onFullSizePhotoEscKey);
   toggleModal();
+  document.addEventListener('keydown', onFullSizePhotoEscKey);
 };
 
-commentsLoaderBtn.addEventListener('click', onCommentsLoaderBtn);
-closeBtn.addEventListener('click', onCloseFullSizePhoto);
+commentsLoaderButton.addEventListener('click', onCommentsLoaderButtonClick);
+closeButton.addEventListener('click', onCloseFullSizePhotoClick);
 
 
 export { renderFullSizePhoto };

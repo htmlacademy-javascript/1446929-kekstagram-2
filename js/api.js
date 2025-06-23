@@ -1,55 +1,36 @@
-import { initFilters } from './photos-filters.js';
-
 const BASE_URL = 'https://31.javascript.htmlacademy.pro/kekstagram';
+
+const STATUS_CODE_SUCCESS = 200;
 
 const Route = {
   GET_DATA: '/data',
   SEND_DATA: '/',
 };
 
-const DELAY_TIME = 5000;
-
-const dataErrorTemplate = document.querySelector('#data-error').content;
-
-const showErrorMessage = () => {
-  const errorElement = dataErrorTemplate.cloneNode(true);
-  const errorMessage = errorElement.querySelector('.data-error');
-  document.body.appendChild(errorMessage);
-  setTimeout(() => {
-    document.body.removeChild(errorMessage);
-  }, DELAY_TIME);
-  return errorMessage;
+const Method = {
+  GET: 'GET',
+  POST: 'POST',
 };
 
+const ErrorText = {
+  GET_DATA: 'Не удалось загрузить данные. Попробуйте обновить страницу',
+  SEND_DATA: 'Не удалось отправить форму. Попробуйте ещё раз',
+};
 
-const getData = (onSuccess) => {
-  fetch(`${BASE_URL}${Route.GET_DATA}`)
+const load = (route, errorText, method = Method.GET, body = null) =>
+  fetch(`${BASE_URL}${route}`, { method, body })
     .then((response) => {
-      if (!response.ok) {
-        throw new Error(showErrorMessage);
+      if (response.status !== STATUS_CODE_SUCCESS) {
+        throw new Error();
       }
       return response.json();
     })
-    .then((photos) => {
-      onSuccess(photos);
-      initFilters(photos);
-    })
-    .catch((error) => showErrorMessage(error));
-};
-
-const sendData = (onSuccess, onFail, body) => {
-  fetch(`${BASE_URL}${Route.SEND_DATA}`,
-    {
-      method: 'POST',
-      body,
-    },
-  )
-    .then(() => {
-      onSuccess();
-    })
     .catch(() => {
-      onFail();
+      throw new Error(errorText);
     });
-};
 
-export { getData, sendData, showErrorMessage };
+const getData = () => load(Route.GET_DATA, ErrorText.GET_DATA);
+
+const sendData = (body) => load(Route.SEND_DATA, ErrorText.SEND_DATA, Method.POST, body);
+
+export { getData, sendData };

@@ -20,10 +20,11 @@ const renderPhoto = (photo) => {
 };
 
 const renderPhotos = (photos) => {
-  photos?.slice().forEach((photo) => {
+  photos?.forEach((photo) => {
     userPhotosFragment.appendChild(renderPhoto(photo));
   });
 
+  userPhotosContainer.querySelectorAll('.picture').forEach((photo) => photo.remove());
   userPhotosContainer.appendChild(userPhotosFragment);
 };
 
