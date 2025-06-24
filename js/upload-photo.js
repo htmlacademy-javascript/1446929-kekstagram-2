@@ -2,6 +2,7 @@ import { toggleClass, isEscapeKey, showWrongFileMessage } from './util.js';
 import { updateScale, resetScale, updateEffect, resetSlider } from './update-photo-mode.js';
 import { sendData } from './api.js';
 
+const HASHTAG_REGEX = /^#[a-zа-яё0-9]{1,19}$/i;
 const HASHTAG_MAX_COUNT = 5;
 const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 const DESCRIPTION_MAX_LENGTH = 140;
@@ -47,7 +48,7 @@ const validatePhotoDescription = (description) => description.length < DESCRIPTI
 
 const validateHashtags = (value) => {
   errorMessage = '';
-  const hashtagRegex = /^#[a-zа-яё0-9]{1,19}$/i;
+
   const inputText = value.toLowerCase().trim();
 
   if (!inputText) {
@@ -66,7 +67,7 @@ const validateHashtags = (value) => {
       error: 'Хэштег должен начинаться с символа #'
     },
     {
-      check: inputArray.some((item, index, array) => array.includes(item, index + 1)),
+      check: inputArray.some((item, index, arrayItems) => arrayItems.includes(item, index + 1)),
       error: 'Хэштеги не должны повторяться'
     },
     {
@@ -82,7 +83,7 @@ const validateHashtags = (value) => {
       error: `Нельзя указать больше ${HASHTAG_MAX_COUNT} хэштегов`
     },
     {
-      check: inputArray.some((item) => !hashtagRegex.test(item)),
+      check: inputArray.some((item) => !HASHTAG_REGEX.test(item)),
       error: 'Хештег содержит недопустимые символы'
     }
   ];
@@ -114,9 +115,9 @@ const toggleModal = () => {
 };
 
 const resetForm = () => {
-  const errorArray = document.querySelectorAll('.img-upload__field-wrapper--error');
-  if (errorArray.length !== 0) {
-    errorArray.forEach((error) => {
+  const errors = document.querySelectorAll('.img-upload__field-wrapper--error');
+  if (errors.length !== 0) {
+    errors.forEach((error) => {
       error.textContent = '';
     });
   }
